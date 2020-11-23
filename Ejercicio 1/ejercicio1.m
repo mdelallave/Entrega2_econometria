@@ -47,7 +47,7 @@ mu0=mu;
 delta10=0.8;
 alpha10=0.12;
 
-% Transformamos los par·metros
+% Transformamos los par√°metros
 delta10tr=log(delta10/(1-delta10-alpha10));
 alpha10tr=log(alpha10/(1-alpha10-delta10));
 k0=(1-delta10-alpha10)*0.4;
@@ -59,14 +59,14 @@ options=optimset('Display','iter','MaxFunEvals',10000,...
     'MaxIter',10000,'TolFun',0.00001);
 thtropt=fminsearch('lfv1c',th0tr,options); 
 
-% Recuperamos los par·metros, ahora Ûptimos
+% Recuperamos los par√°metros, ahora √≥ptimos
 muopt=thtropt(1);
 delta1opt=exp(thtropt(3))/(1+exp(thtropt(4))+exp(thtropt(3)));
 alpha1opt=exp(thtropt(4))/(1+exp(thtropt(3))+exp(thtropt(4)));
 kopt=exp(thtropt(2));
 
-% Obtenemos la volatilidad condicional y maximizamos la funciÛn de 
-% verosimilitud para los parametros Ûptimos.
+% Obtenemos la volatilidad condicional y maximizamos la funci√≥n de 
+% verosimilitud para los parametros √≥ptimos.
 [lfv_g11,vsigma2_g11]=lfv1c(thtropt);
 figure(2);
 plot([vsigma2t vsigma2_g11]);
@@ -75,7 +75,7 @@ thopt_g11=[muopt kopt delta1opt alpha1opt]'; % Vector de parametros optimos
 x0_g11=thopt_g11; 
 n=length(x0_g11);
 
-    % Calculando el gradiente numÈricamente
+    % Calculando el gradiente num√©ricamente
     auxi=1e-7*eye(n);
     Grad0=zeros(n,1);
     for i=1:n
@@ -83,7 +83,7 @@ n=length(x0_g11);
             feval('lfv_s1',x0_g11-auxi(:,i)))/(2*auxi(i,i));
     end
     
-    % Calculando el hessiano numÈricamente
+    % Calculando el hessiano num√©ricamente
     H0=zeros(n,n);
     auxi=1e-5*eye(n);
     for i=1:n
@@ -104,7 +104,7 @@ sgd_g11=sqrt(diag(informd_g11));
 % Obtenemos medida de calidad del ajuste
 [aic_g11,bic_g11] = aicbic(lfv_g11(end),length(thopt_g11),T);
 
-%% EGARCH(1,1) con innovaciÛn normal (eg11)
+%% EGARCH(1,1) con innovaci√≥n normal (eg11)
 % Valores iniciales
 mu0=mu;
 alpha00=-0.5; 
@@ -118,7 +118,7 @@ alpha10tr=log(alpha10);
 gamma0tr=log(-gamma0);
 th0tr=[mu0,alpha00,alpha10tr,beta10tr,gamma0tr];
 
-% Obtenemos los par·metros optimos usando un egarch y f∫ de
+% Obtenemos los par√°metros optimos usando un egarch y f¬∫ de
 % versomilitud basada en la norma
 options=optimset('Display','iter','MaxFunEvals',10000,...
     'MaxIter',10000,'TolFun',0.00001);
@@ -130,8 +130,8 @@ beta1opt=exp(thtropt(4))/(1+exp(thtropt(4)));
 alpha0opt=thtropt(2);
 gammaopt=-exp(thtropt(5));
 
-% Con los par·metros Ûptimos, calculamos volatilidad condicional y valor de
-% f∫ verosimilitud
+% Con los par√°metros √≥ptimos, calculamos volatilidad condicional y valor de
+% f¬∫ verosimilitud
 [lfv_eg11,vsigma2_eg11]=elfv1c(thtropt);
 figure(3);
 plot([vsigma2t vsigma2_eg11]);
@@ -140,7 +140,7 @@ thopt_eg11=[muopt alpha0opt alpha1opt beta1opt gammaopt]';
 x0_eg11=thopt_eg11; 
 n=length(x0_eg11);
 
- % Calculando el gradiente numÈricamente
+ % Calculando el gradiente num√©ricamente
     auxi=1e-7*eye(n); auxi(2,2)=0.000000001;
     Grad0=zeros(n,1);
     for i=1:n
@@ -148,7 +148,7 @@ n=length(x0_eg11);
             feval('elfv_s1',x0_eg11-auxi(:,i)))/(2*auxi(i,i));
     end
     
-    % Calculando el hessiano numÈricamente
+    % Calculando el hessiano num√©ricamente
     H0=zeros(n,n);
     auxi=1e-5*eye(n); %auxi(2,2)=0.000000001;
     for i=1:n
@@ -183,7 +183,7 @@ k0=(1-delta10-alpha10)*std(vyt)^2;
 k0tr=log(k0);
 th0tr=[mu0,k0tr,delta10tr,alpha10tr,c0]
 
-% Optimizamos los par·metros
+% Optimizamos los par√°metros
 options=optimset('Display','iter','MaxFunEvals',10000,...
     'MaxIter',10000,'TolFun',0.00001);
 thtropt=fminunc('lfv1mc',th0tr,options);
@@ -193,7 +193,7 @@ alpha1opt=exp(thtropt(4))/(1+exp(thtropt(3))+exp(thtropt(4)));
 kopt=exp(thtropt(2));
 copt=thtropt(5);
 
-% Calculamos vol condicional y valor de f∫ verosimilitud
+% Calculamos vol condicional y valor de f¬∫ verosimilitud
 [lfv_mg11,vsigma2_mg11]=lfv1mc(thtropt);
 figure(4);
 plot([vsigma2t vsigma2_mg11]);
@@ -201,7 +201,7 @@ plot([vsigma2t vsigma2_mg11]);
 
 thopt_mg11=[muopt kopt delta1opt alpha1opt copt]'; 
 x0_mg11=thopt_mg11; n=length(x0_mg11);
-    % Calculando el gradiente numÈricamente
+    % Calculando el gradiente num√©ricamente
     auxi=1e-7*eye(n); auxi(2,2)=0.000000001;
     Grad0=zeros(n,1);
     for i=1:n
@@ -209,7 +209,7 @@ x0_mg11=thopt_mg11; n=length(x0_mg11);
             feval('lfvm_s1',x0_mg11 - auxi(:,i)))/(2*auxi(i,i));
     end
     
-    % Calculando el hessiano numÈricamente
+    % Calculando el hessiano num√©ricamente
     H0=zeros(n,n);
     auxi=1e-5*eye(n);auxi(2,2)=0.000000001;
     for i=1:n
@@ -230,7 +230,7 @@ sgd_mg11=sqrt(diag(informd_mg11));
 [aic_mg11,bic_mg11] = aicbic(lfv_mg11(end),length(thopt_mg11),T);
 
 %% GARCH(1,1) con innovaciones t-student (tg11)
-% Par·metros iniciales
+% Par√°metros iniciales
 mu0=mu;
 delta10=0.5;
 alpha10=0.3;
@@ -248,7 +248,7 @@ th0tr=[mu0,k0tr,delta10tr,alpha10tr,gradosl0tr];
 options=optimset('Display','iter','MaxFunEvals',10000,...
     'MaxIter',10000,'TolFun',0.00001);
 
-% Minimizamos la funciÛn de una tstudent
+% Minimizamos la funci√≥n de una tstudent
 thtropt=fminunc('lfv1tc',th0tr,options);
 
 % Recuperamos los valores en niveles, pero ahora optimos.
@@ -265,7 +265,7 @@ plot([vsigma2t vsigma2_tg11]);
 thopt_tg11=[muopt kopt delta1opt alpha1opt gradoslopt]'; 
 x0_tg11=thopt_tg11; n=length(x0_tg11);
 
-    % Calculando el gradiente numÈricamente
+    % Calculando el gradiente num√©ricamente
     auxi=1e-7*eye(n); auxi(2,2)=0.000000001;
     Grad0=zeros(n,1);
     for i=1:n
@@ -273,7 +273,7 @@ x0_tg11=thopt_tg11; n=length(x0_tg11);
             feval('lfvt_s1',x0_tg11-auxi(:,i)))/(2*auxi(i,i));
     end
     
-    % Calculando el hessiano numÈricamente
+    % Calculando el hessiano num√©ricamente
     H0 = zeros(n,n);
     auxi=1e-5*eye(n);auxi(2,2)=0.000000001;
     for i=1:n
@@ -307,7 +307,7 @@ k0=(1-delta10-alpha10-gamma10/2)*std(vyt)^2;
 k0tr=log(k0);
 th0tr=[mu0,k0tr,delta10tr,alpha10tr,gamma10tr];
 
-% Optimizamos los par·metros minimizando la funciÛn de verosimilitud
+% Optimizamos los par√°metros minimizando la funci√≥n de verosimilitud
 options=optimset('Display','iter','MaxFunEvals',10000,...
     'MaxIter',10000,'TolFun',0.00001);
 thtropt=fminunc('Tlfv1c',th0tr,options);
@@ -318,8 +318,8 @@ alpha1opt=exp(thtropt(4))/(1+exp(thtropt(3))+exp(thtropt(4))+exp(thtropt(5)));
 gamma1opt=2*exp(thtropt(5))/(1+exp(thtropt(3))+exp(thtropt(4))+exp(thtropt(5)));
 kopt=exp(thtropt(2));
 
-% Optimizamos f∫ de verosimilitud y obtenemos vol condicional con
-% parametros Ûptimos
+% Optimizamos f¬∫ de verosimilitud y obtenemos vol condicional con
+% parametros √≥ptimos
 [lfv_tga11,vsigma2_tga11]=Tlfv1c(thtropt);
 figure(6);
 plot([vsigma2t vsigma2_tga11]);
@@ -327,7 +327,7 @@ plot([vsigma2t vsigma2_tga11]);
 thopt_tga11=[muopt kopt delta1opt alpha1opt gamma1opt]'; 
 x0_tga11=thopt_tga11; n=length(x0_tga11);
 
-    % Calculando el gradiente numÈricamente
+    % Calculando el gradiente num√©ricamente
     auxi=1e-7*eye(n); auxi(2,2)=0.000000001;
     Grad0=zeros(n,1);
     for i=1:n
@@ -335,7 +335,7 @@ x0_tga11=thopt_tga11; n=length(x0_tga11);
             feval('Tlfv_s1',x0_tga11-auxi(:,i)))/(2*auxi(i,i));
     end
     
-    % Calculando el hessiano numÈricamente
+    % Calculando el hessiano num√©ricamente
     H0=zeros(n,n);
     auxi=1e-5*eye(n); auxi(2,2)=0.000000001;
     auxi(4,4)=(1/1000)*auxi(4,4); % Evitamos num negativos en la varianza
@@ -366,4 +366,4 @@ names_var = {'GARCH ';
             'GARCHt';
             'TGARCH'};
        
-tabla1 = table(AIC, BIC,'RowNames',names_var)
+tabla = table(AIC, BIC,'RowNames',names_var)
