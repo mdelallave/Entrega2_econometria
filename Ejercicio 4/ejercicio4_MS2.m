@@ -1,5 +1,5 @@
 %HAY DOS PROCESOS DE MARKOV INDEPENDIENTES: UNO PARA LAS BETAS DE LA
-%REGRESIÓN Y OTRO PARA LAS VARIANZAS
+%REGRESIÃ“N Y OTRO PARA LAS VARIANZAS
 clear;
 global r1 r2
 datos1 = xlsread('data_WTI.xlsx','B4:C1721');
@@ -13,7 +13,7 @@ vsigmat_1=(r1-mu(1)).^2;
 vsigmat_2=(r2-mu(2)).^2;
 vsigmat=[vsigmat_1 vsigmat_2];
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%regresión ratio de cobertura
+%regresiÃ³n ratio de cobertura
 X=[ones(T,1) r2];
 betamco=inv(X'*X)*X'*r1;
 rat_cob_mco=betamco(2);
@@ -67,9 +67,9 @@ P=[p11_1opt*p11_2opt          p11_1opt*(1-p22_2opt)      (1-p22_1opt)*p11_2opt  
 thopt=[beta00opt beta01opt beta10opt beta11opt sigma1opt sigma2opt ...
        p11_1opt p22_1opt p11_2opt p22_2opt]';
 x0=thopt; n=length(x0);
-    % Calculando el hessiano numéricamente
+    % Calculando el hessiano numÃ©ricamente
     H0=zeros(n,n);
-    auxi=diag(x0*1e-4);auxi(2,2)=0.0001;%auxi(7,7)=0.00001;
+    auxi=diag(x0*1e-4);%auxi(4,4)=0.0001;auxi(7,7)=0.00001;
     for i=1:n
         for j=1:n
             H0(i,j)=(feval('lfv_MS_2',x0+auxi(:,i)+auxi(:,j),0)-...
@@ -80,7 +80,7 @@ x0=thopt; n=length(x0);
     end   
 informd=inv(H0);
 sgd=sqrt((diag(informd)));
-%display('estimaciones de mu,alpha,delta y k y sus desviaciones típicas');
+%display('estimaciones de mu,alpha,delta y k y sus desviaciones tÃ­picas');
 format long;
 %[x0 sgd]
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -101,12 +101,12 @@ Efectividad_MS_tt=var(r1-ratio_cobtt.*r2);
 Efectividad_MS_tT=var(r1-ratio_cobtT.*r2);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %Tabla de estimaciones
-names_var={'beta0-régimen 1 ';
-           'beta0-régimen 2 ';           
-           'beta1-régimen 1 ';
-           'beta1-régimen 2 ';           
-           'sigma-régimen 1 ';
-           'sigma-régimen 2 ';
+names_var={'beta0-rÃ©gimen 1 ';
+           'beta0-rÃ©gimen 2 ';           
+           'beta1-rÃ©gimen 1 ';
+           'beta1-rÃ©gimen 2 ';           
+           'sigma-rÃ©gimen 1 ';
+           'sigma-rÃ©gimen 2 ';
            'p11_1           ';
            'p22_1           ';
            'p11_2           ';
@@ -132,22 +132,22 @@ TABLA2=table(coefficient,'RowNames',names_var)
 figure;
 subplot(3,2,1);
 plot([xitt(:,1) xitT(:,1)]);
-title('Probabilidad de que una observación esté gobernada por el régimen 1');
+title('Probabilidad de que una observaciÃ³n estÃ© gobernada por el rÃ©gimen 1');
 legend('xi_{t|t}','xi_{t|T}');
 subplot(3,2,2);
 plot([xitt(:,2) xitT(:,2)]);
-title('Probabilidad de que una observación esté gobernada por el régimen 2');
+title('Probabilidad de que una observaciÃ³n estÃ© gobernada por el rÃ©gimen 2');
 legend('xi_{t|t}','xi_{t|T}');
 subplot(3,2,3);
 plot([xitt(:,3) xitT(:,3)]);
-title('Probabilidad de que una observación esté gobernada por el régimen 3');
+title('Probabilidad de que una observaciÃ³n estÃ© gobernada por el rÃ©gimen 3');
 legend('xi_{t|t}','xi_{t|T}');
 subplot(3,2,4);
 plot([xitt(:,4) xitT(:,4)]);
-title('Probabilidad de que una observación esté gobernada por el régimen 4');
+title('Probabilidad de que una observaciÃ³n estÃ© gobernada por el rÃ©gimen 4');
 legend('xi_{t|t}','xi_{t|T}');
-subplot(3,2,5);
+subplot(3,2,[5 6]);
 plot([ones(length(ratio_cobtt),1), rat_cob_mco.*ones(length(ratio_cobtt),1)...
       ratio_cobtt ratio_cobtT]);
 title('Ratios de Cobertura');
-legend('naive', 'MCO', 'ratio-cob_{t|t}', 'ratio-cob_{t|T}');
+legend('naive', 'MCO', 'MS_{t|t}', 'MS_{t|T}');
