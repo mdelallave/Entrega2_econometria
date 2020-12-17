@@ -356,6 +356,22 @@ sgd_tga11=sqrt(diag(informd_tga11));
 
 [aic_tga11,bic_tga11] = aicbic(lfv_tga11(end),length(thopt_tga11),T);
 
+%% Significatividad de los parámetros
+alpha = 0.05; % Nivel significación
+
+
+sig_g11 = [(x0_g11./ sgd_g11) < norminv(1 - alpha/2)];
+sig_eg11 = (x0_eg11./ sgd_eg11) < norminv(1 - alpha/2);
+sig_mg11 = (x0_mg11./ sgd_mg11) < norminv(1 - alpha/2);
+sig_tg11 = (x0_tg11./ sgd_tg11) < norminv(1 - alpha/2);
+sig_tga11 = (x0_tga11./ sgd_tga11) < norminv(1 - alpha/2);
+
+tabla_significatividad = table([sig_g11; 0], [sig_eg11], [sig_mg11],...
+    [sig_tg11], [sig_tga11]);        
+tabla_significatividad.Properties.VariableNames = {'GARCH ' 'EGARCH' ...
+    'GARCHM' 'GARCHt' 'TGARCH'}
+tabla_significatividad % 1 o true implica que no es significativo
+
 %% Comparamos los modelos
 AIC = [aic_g11 aic_eg11 aic_mg11 aic_tg11 aic_tga11]';
 BIC = [bic_g11 bic_eg11 bic_mg11 bic_tg11 bic_tga11]';
@@ -365,5 +381,5 @@ names_var = {'GARCH ';
             'GARCHM';
             'GARCHt';
             'TGARCH'};
-       
-tabla = table(AIC, BIC,'RowNames',names_var)
+        
+tabla_crit_inf = table(AIC, BIC,'RowNames',names_var)
