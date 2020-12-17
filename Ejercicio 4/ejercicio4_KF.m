@@ -11,7 +11,7 @@ vsigmat_1=(r1-mu(1)).^2;
 vsigmat_2=(r2-mu(2)).^2;
 vsigmat=[vsigmat_1 vsigmat_2];
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%regresión ratio de cobertura
+%regresiÃ³n ratio de cobertura
 X=[ones(T,1) r2];
 betamco=inv(X'*X)*X'*r1;
 rat_cob_mco=betamco(2);
@@ -19,8 +19,6 @@ Efectividad_mco=var(r1-rat_cob_mco*r2);
 Efectividad_naive=var(r1-r2);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %Kalman Filter
-% ESTOS PARÁMETROS INICIALES NO SON NECESARIOS SI USAMOS LOS VALORES
-% INICIALES DEL PROFESOR. BORRAR EN CASO DE NO USARLOS.
 betabar00=betamco(1);
 betabar10=betamco(2);
 f110=0.5;f110tr=log(f110/(1-f110));
@@ -29,10 +27,7 @@ sigmaw0=std(r1-X*betamco);sigmaw0tr=log(sigmaw0);
 sigma110=0.001;sigma110tr=log(sigma110);
 sigma220=0.1;sigma220tr=log(sigma220);
 %
-%th0tr=[betabar00 betabar10 2.3 2.3 2 3 3]; NO FUNCIONA
-th0tr=[0.000071 0.8665 -0.8 0.93/(1-0.93) -log(10*0.000058) -log(0.066) -log(0.335)]; % VALORES INICIALES PROFESOR
-%th0tr=[-betabar00 betabar10 f110tr f220tr -sigmaw0tr -sigma110tr -sigma220tr]; % VALORES INICIALES PROPUESTOS (MANU)
-
+th0tr=[-betabar00 betabar10 f110tr f220tr -sigmaw0tr -sigma110tr -sigma220tr];
 %
 options=optimset('Display','Iter','MaxFunEvals',10000,'MaxIter',10000,... 
                  'TolFun',0.00001);
@@ -52,7 +47,7 @@ sigma22=exp(-thtropt(7))/10;
 %
 thopt=[betabar0 betabar1 f11 f22 sigmaw sigma11 sigma22]';
 x0=thopt; n=length(x0);
-    % Calculando el hessiano numéricamente
+    % Calculando el hessiano numÃ©ricamente
     H0=zeros(n,n);
     auxi=diag(x0*1e-4);%auxi(4,4)=0.0001;auxi(7,7)=0.00001;
     for i=1:n
@@ -65,7 +60,7 @@ x0=thopt; n=length(x0);
     end   
 informd=inv(H0);
 sgd1=sqrt(abs(diag(informd)));
-%display('estimaciones de mu,alpha,delta y k y sus desviaciones típicas');
+%display('estimaciones de mu,alpha,delta y k y sus desviaciones tÃ­picas');
 format long;
 [x0 sgd1]
 %
@@ -107,4 +102,3 @@ disp('__________________________________________________________________________
 disp('_________________________________________________________________________________________________________________')
 disp('Efectividades del ratio de cobertura')
 TABLA2=table(coefficient,'RowNames',names_var)
-
